@@ -1,0 +1,28 @@
+version: '3' #Docker version
+services: #Services of the app
+  db: # Database service
+    image: postgres # Docker image for PostgreSQL
+    volumes:
+      - ./data/db:/var/lib/postgresql/data # Persist data on your local machine
+    environment: # Environment variables to configure PostgreSQL
+      POSTGRES_DB: basicemail
+      POSTGRES_USER: mateo
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - '5432:5432'
+  backend: #backend service
+    build: #Build this service from...
+      context: ./backend/emailbackend # Directory of the dockerfile for the image
+      dockerfile: Dockerfile.back # Dockerfile name
+    ports:
+      - '8000:8000' #Using the port 8000
+    depends_on: # The backend depends on the database
+      - db
+  frontend: #Frontend service
+    build: #Build frontend service from...
+      context: ./frontend #Directory of the dockerfile for the image
+      dockerfile: Dockerfile.front #Dockerfile name
+    ports:
+      - '3000:3000' #Using the port 3000
+    depends_on: # The frontend depends on the backend
+      - backend

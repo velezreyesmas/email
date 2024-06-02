@@ -1,0 +1,24 @@
+#Based in python 3.8 version.
+FROM python:3.10-slim-buster
+
+#Django server showed on the cmd
+ENV PYTHONUNBUFFERED 1
+
+#Set the workdir as /backend_code
+WORKDIR /backend_code
+
+#copy dependencies into /backend_code directory
+COPY requirements.txt /backend_code/
+
+#install dependencies
+RUN pip install --upgrade pip && pip install -r requirements.txt
+
+#Copy the rest of the files
+COPY . /backend_code/
+
+#Expose the port 8000 to use it
+EXPOSE 8000
+
+#Command to start the backend
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+
